@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { defineEmits, ref } from 'vue';
+import { defineEmits, ref, defineProps } from 'vue';
 
 //unique ID
 let guidFactory = (function () {
@@ -61,10 +61,16 @@ let guidFactory = (function () {
   };
 })();
 
-const title = ref('');
-const details = ref('');
-const status = ref('');
-const id = ref(guidFactory.create(1));
+const props = defineProps({
+  todo: {
+    type: Object,
+  },
+});
+
+const title = ref(props.todo?.title || '');
+const details = ref(props.todo?.details || '');
+const status = ref(props.todo?.status || '');
+const id = ref(props.todo?.id || guidFactory.create(1));
 
 const emit = defineEmits(['add-handler']);
 function handleClick() {

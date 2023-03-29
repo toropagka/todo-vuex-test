@@ -9,7 +9,7 @@
         <button
           type="button"
           class="header_button header_button__edit"
-          @click="editTodo"
+          @click="edit"
         >
           edit
         </button>
@@ -25,12 +25,18 @@
 
     <p class="item_details">{{ todo.details }}</p>
   </div>
-  <the-form v-if="clickedEdit"></the-form>
+  <slot></slot>
+  <!-- <the-form
+    v-if="clickedEdit"
+    :todo="todoObj"
+    @add-handler="saveChanges"
+  ></the-form> -->
 </template>
+
 <script setup>
 import TheForm from './TheForm.vue';
 
-import { defineProps, toRef, ref } from 'vue';
+import { defineProps, defineEmits, toRef, ref } from 'vue';
 import { useStore } from 'vuex';
 const props = defineProps({
   todo: {
@@ -38,17 +44,26 @@ const props = defineProps({
   },
 });
 
-const clickedEdit = ref(false);
+// const clickedEdit = ref(false);
 
 const store = useStore();
-const todo = toRef(props, 'todo');
+const todos = toRef(props, 'todo');
+// const todoObj = ref({ ...todos.value });
+
 const deleteTodo = () => {
-  store.dispatch('deleteTodo', todo);
+  store.dispatch('deleteTodo', todos);
 };
-const editTodo = () => {
-  clickedEdit.value = !clickedEdit.value;
-  console.log(clickedEdit);
-};
+
+const emit = defineEmits(['edit']);
+const edit = () => emit('edit');
+// const editTodo = () => {
+//   clickedEdit.value = !clickedEdit.value;
+// };
+// const saveChanges = (todo) => {
+//   clickedEdit.value = !clickedEdit.value;
+
+//   store.dispatch('updateTodo', todo);
+// };
 </script>
 
 <style scoped>
