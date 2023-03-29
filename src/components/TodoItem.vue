@@ -25,27 +25,28 @@
 
     <p class="item_details">{{ todo.details }}</p>
   </div>
+  <the-form v-if="clickedEdit"></the-form>
 </template>
 <script setup>
-import { defineProps, toRef } from 'vue';
-import { useStore } from 'vuex';
+import TheForm from './TheForm.vue';
 
+import { defineProps, toRef, ref } from 'vue';
+import { useStore } from 'vuex';
 const props = defineProps({
   todo: {
     type: Object,
   },
 });
-let clickedEdit = false;
+
+const clickedEdit = ref(false);
 
 const store = useStore();
-
 const todo = toRef(props, 'todo');
 const deleteTodo = () => {
   store.dispatch('deleteTodo', todo);
 };
-
 const editTodo = () => {
-  clickedEdit = true;
+  clickedEdit.value = !clickedEdit.value;
   console.log(clickedEdit);
 };
 </script>
@@ -64,7 +65,6 @@ const editTodo = () => {
   justify-content: space-between;
   align-items: center;
 }
-
 .header_text {
   width: 9rem;
 }
@@ -87,7 +87,6 @@ const editTodo = () => {
   height: 2.5rem;
   border-radius: 10px;
 }
-
 .queued {
   background-color: rgb(218, 50, 50);
 }
@@ -97,7 +96,6 @@ const editTodo = () => {
 .completed {
   background-color: rgb(39, 205, 39);
 }
-
 .edit-popup {
   width: 100vw;
   height: 100vh;
