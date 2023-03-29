@@ -35,7 +35,7 @@
       </label>
     </div>
 
-    <button>Add Project</button>
+    <button>SAVE</button>
   </form>
 </template>
 
@@ -94,7 +94,7 @@ function handleClick() {
 form {
   display: flex;
   flex-direction: column;
-  background: #2f4765;
+  background: #4578b7;
   padding: 20px;
   border-radius: 10px;
   margin: 0 2rem 2rem;
@@ -116,11 +116,11 @@ input {
   border-bottom: 2px solid #ddd;
   width: 100%;
   box-sizing: border-box;
-  background-color: #2f4765;
+  background-color: inherit;
   color: #bbb;
 }
 textarea {
-  background-color: #2f4765;
+  background-color: inherit;
   border: 2px solid #ddd;
   padding: 10px;
   width: 100%;

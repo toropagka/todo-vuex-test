@@ -1,42 +1,44 @@
 <template>
-  <div class="item">
-    <div class="item_header">
-      <h3 class="header_text">{{ todo.title }}</h3>
-      <div class="header_status" :class="todo.status">
-        {{ todo.status }}
+  <div class="wrapper">
+    <div class="item">
+      <div class="item_header">
+        <h3 class="header_text">{{ todo.title }}</h3>
+        <div class="header_status" :class="todo.status">
+          {{ todo.status }}
+        </div>
+        <div class="header_buttons">
+          <button
+            type="button"
+            class="header_button header_button__edit"
+            @click="editTodo"
+          >
+            edit
+          </button>
+          <button
+            type="button"
+            class="header_button header_button__delete"
+            @click="deleteTodo"
+          >
+            delete
+          </button>
+        </div>
       </div>
-      <div class="header_buttons">
-        <button
-          type="button"
-          class="header_button header_button__edit"
-          @click="edit"
-        >
-          edit
-        </button>
-        <button
-          type="button"
-          class="header_button header_button__delete"
-          @click="deleteTodo"
-        >
-          delete
-        </button>
-      </div>
-    </div>
 
-    <p class="item_details">{{ todo.details }}</p>
+      <p class="item_details">{{ todo.details }}</p>
+    </div>
+    <the-form
+      v-if="clickedEdit"
+      :todo="todo"
+      @add-handler="saveChanges"
+      class="edit-form"
+    ></the-form>
   </div>
-  <slot></slot>
-  <!-- <the-form
-    v-if="clickedEdit"
-    :todo="todoObj"
-    @add-handler="saveChanges"
-  ></the-form> -->
 </template>
 
 <script setup>
 import TheForm from './TheForm.vue';
 
-import { defineProps, defineEmits, toRef, ref } from 'vue';
+import { defineProps, toRef, ref } from 'vue';
 import { useStore } from 'vuex';
 const props = defineProps({
   todo: {
@@ -44,29 +46,28 @@ const props = defineProps({
   },
 });
 
-// const clickedEdit = ref(false);
-
 const store = useStore();
 const todos = toRef(props, 'todo');
-// const todoObj = ref({ ...todos.value });
+
+const clickedEdit = ref(false);
+const editTodo = () => {
+  clickedEdit.value = !clickedEdit.value;
+};
+const saveChanges = (todo) => {
+  clickedEdit.value = !clickedEdit.value;
+
+  store.dispatch('updateTodo', todo);
+};
 
 const deleteTodo = () => {
   store.dispatch('deleteTodo', todos);
 };
-
-const emit = defineEmits(['edit']);
-const edit = () => emit('edit');
-// const editTodo = () => {
-//   clickedEdit.value = !clickedEdit.value;
-// };
-// const saveChanges = (todo) => {
-//   clickedEdit.value = !clickedEdit.value;
-
-//   store.dispatch('updateTodo', todo);
-// };
 </script>
 
 <style scoped>
+.wrapper {
+  position: relative;
+}
 .item {
   display: flex;
   flex-direction: column;
@@ -115,5 +116,13 @@ const edit = () => emit('edit');
   width: 100vw;
   height: 100vh;
   background-color: rgba(131, 131, 132, 0.5);
+}
+.edit-form {
+  position: absolute;
+  top: 0;
+  left: 15rem;
+  z-index: 10;
+  width: 50%;
+  background: #29486e;
 }
 </style>
