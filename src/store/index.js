@@ -22,12 +22,16 @@ const store = createStore({
     },
   },
   actions: {
+    // loadTodos({ commit }) {
+    //   const todos = JSON.parse(localStorage.getItem('todos') || '[]');
+    //   commit('SET_TODOS', todos);
+
     loadTodos({ commit }) {
       // Имитируем задержку ответа на 2 секунды
       setTimeout(() => {
         const todos = JSON.parse(localStorage.getItem('todos') || '[]');
         commit('SET_TODOS', todos);
-      }, 5000);
+      }, 3000);
     },
     addTodo({ commit, state }, todo) {
       const newTodo = { ...todo };
