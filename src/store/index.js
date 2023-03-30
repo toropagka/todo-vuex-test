@@ -17,13 +17,17 @@ const store = createStore({
     },
     DELETE_TODO(state, todo) {
       const index = state.todos.findIndex((t) => t.id === todo.id);
+
       state.todos.splice(index, 1);
     },
   },
   actions: {
     loadTodos({ commit }) {
-      const todos = JSON.parse(localStorage.getItem('todos') || '[]');
-      commit('SET_TODOS', todos);
+      // Имитируем задержку ответа на 2 секунды
+      setTimeout(() => {
+        const todos = JSON.parse(localStorage.getItem('todos') || '[]');
+        commit('SET_TODOS', todos);
+      }, 5000);
     },
     addTodo({ commit, state }, todo) {
       const newTodo = { ...todo };

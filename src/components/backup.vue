@@ -1,18 +1,85 @@
 <template>
+  <the-form @add-handler="handleSubmit"></the-form>
+  <paginate
+    :pageCount="pageCount"
+    :currentPage="currentPage.value"
+    :clickHandler="handlePageChange"
+    :container-class="'pagination'"
+    :page-class="'page-item'"
+    :prev-class="'prev-item'"
+    :next-class="'next-item'"
+  />
+  <todo-item
+    v-if="todos"
+    v-for="todo in currentTodos"
+    :key="todo.id"
+    :todo="todo"
+  >
+  </todo-item>
+</template>
+
+<script setup>
+import TodoItem from './TodoItem.vue';
+import TheForm from './TheForm.vue';
+import Paginate from 'vuejs-paginate-next';
+
+import { onMounted, reactive, watchEffect, computed } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+const todos = reactive({ value: [] });
+const currentPage = reactive({ value: 1 });
+const itemsPerPage = 5;
+
+const handleSubmit = (todo) => {
+  store.dispatch('addTodo', todo);
+};
+
+onMounted(() => {
+  store.dispatch('loadTodos');
+});
+
+watchEffect(() => {
+  todos.value = store.getters.getTodos;
+});
+
+const currentTodos = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return todos.value.slice(start, end);
+});
+
+const pageCount = computed(() => {
+  return Math.ceil(todos.value.length / itemsPerPage);
+});
+
+const handlePageChange = (page) => {
+  currentPage.value = page;
+};
+</script>
+
+<style scoped>
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  list-style-type: none;
+  font-size: 1.3rem;
+}
+.search-and-filter {
+  display: flex;
+  flex-direction: column;
+}
+</style>
+
+<!-- <template>
   <div>
     <the-form @add-handler="handleSubmit"></the-form>
-    <div class="search-and-filter">
-      <input
-        class="search-input"
-        type="text"
-        v-model="searchTitle"
-        placeholder="Search by title"
-      />
-      <button class="filter-button" @click="toggleSort">
-        Sort {{ sortDirection }}
-      </button>
+    <input type="text" v-model="searchTitle" placeholder="Search by title" />
+    <div>
+      <button @click="toggleSort">Sort {{ sortDirection }}</button>
     </div>
-    <the-preloader v-if="store.getters.getTodos.length === 0"></the-preloader>
+
     <paginate
       :pageCount="pageCount"
       :currentPage="currentPage.value"
@@ -22,8 +89,12 @@
       :prev-class="'prev-item'"
       :next-class="'next-item'"
     />
-
-    <todo-item v-for="todo in currentTodos" :key="todo.id" :todo="todo">
+    <todo-item
+      v-if="todos"
+      v-for="todo in currentTodos"
+      :key="todo.id"
+      :todo="todo"
+    >
     </todo-item>
   </div>
 </template>
@@ -31,7 +102,6 @@
 <script setup>
 import TodoItem from './TodoItem.vue';
 import TheForm from './TheForm.vue';
-import ThePreloader from './ThePreloader.vue';
 import Paginate from 'vuejs-paginate-next';
 
 import { onMounted, reactive, watchEffect, computed, watch, ref } from 'vue';
@@ -43,19 +113,14 @@ const currentPage = reactive({ value: 1 });
 const itemsPerPage = 5;
 const searchTitle = ref('');
 
-const getTodo = store.getters.getTodos;
-
-//пушим объект новой тудушки в массив
 const handleSubmit = (todo) => {
   store.dispatch('addTodo', todo);
 };
 
-//загружаем из локалсторадж первоначальный список для отрисовки
 onMounted(() => {
   store.dispatch('loadTodos');
 });
 
-//отслеживаем изменения в указанных переменных для переопределения
 watchEffect(() => {
   todos.value = store.getters.getTodos;
   watch(searchTitle, () => {
@@ -65,7 +130,6 @@ watchEffect(() => {
   });
 });
 
-//фильтруем основной массив тудушек и получаем массивы для каждой страницы пагинации
 const currentTodos = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
@@ -75,7 +139,6 @@ const currentTodos = computed(() => {
   return filteredTodos.slice(start, end);
 });
 
-//получаем количество страниц с тудушками
 const pageCount = computed(() => {
   const filteredTodos = todos.value.filter((todo) =>
     todo.title.toLowerCase().includes(searchTitle.value.toLowerCase())
@@ -83,12 +146,10 @@ const pageCount = computed(() => {
   return Math.ceil(filteredTodos.length / itemsPerPage);
 });
 
-//обрабатываем клик по каждой странице пагинации
 const handlePageChange = (page) => {
   currentPage.value = page;
 };
 
-//сортируем записи по каждой странице
 const sortDirection = ref('asc');
 
 const toggleSort = () => {
@@ -102,12 +163,6 @@ const toggleSort = () => {
 </script>
 
 <style scoped>
-.search-input {
-  height: 2rem;
-  font-size: 1.3rem;
-  width: 70%;
-  border-radius: 0.3rem;
-}
 .pagination {
   display: flex;
   justify-content: center;
@@ -117,10 +172,6 @@ const toggleSort = () => {
 }
 .search-and-filter {
   display: flex;
-  justify-content: space-between;
-  margin: 0 2rem;
+  flex-direction: column;
 }
-.filter-button {
-  width: 7rem;
-}
-</style>
+</style> -->

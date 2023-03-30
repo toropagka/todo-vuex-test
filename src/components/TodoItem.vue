@@ -17,7 +17,7 @@
           <button
             type="button"
             class="header_button header_button__delete"
-            @click="deleteTodo"
+            @click="deleteTodo(todo)"
           >
             delete
           </button>
@@ -47,7 +47,7 @@ const props = defineProps({
 });
 
 const store = useStore();
-const todos = toRef(props, 'todo');
+// const todos = toRef(props, 'todo');
 
 const clickedEdit = ref(false);
 const editTodo = () => {
@@ -59,8 +59,8 @@ const saveChanges = (todo) => {
   store.dispatch('updateTodo', todo);
 };
 
-const deleteTodo = () => {
-  store.dispatch('deleteTodo', todos);
+const deleteTodo = (todo) => {
+  store.dispatch('deleteTodo', todo);
 };
 </script>
 
@@ -98,11 +98,11 @@ const deleteTodo = () => {
   align-items: center;
   gap: 1rem;
 }
-.header_button {
+/* button {
   width: 4rem;
   height: 2.5rem;
   border-radius: 10px;
-}
+} */
 .queued {
   background-color: rgb(218, 50, 50);
 }

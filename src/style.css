@@ -23,4 +23,19 @@ body {
 
 button {
   cursor: pointer;
+  width: 4rem;
+  height: 2.5rem;
+  border-radius: 10px;
+}
+.disabled {
+  color: rgb(135, 133, 132);
+}
+.page-item,
+.next-item,
+.prev-item {
+  cursor: pointer;
+}
+.active {
+  color: blue;
+  font-weight: 700;
 }
