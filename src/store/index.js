@@ -27,11 +27,18 @@ const store = createStore({
     //   commit('SET_TODOS', todos);
 
     loadTodos({ commit }) {
-      // Имитируем задержку ответа на 2 секунды
-      setTimeout(() => {
-        const todos = JSON.parse(localStorage.getItem('todos') || '[]');
-        commit('SET_TODOS', todos);
-      }, 3000);
+      // Возвращаем промис
+      return new Promise((resolve) => {
+        // Имитируем задержку ответа на 2 секунды
+        setTimeout(() => {
+          const todos = JSON.parse(localStorage.getItem('todos') || '[]');
+          commit('SET_TODOS', todos);
+          console.log('vuex');
+
+          // Вызываем resolve после выполнения таймера
+          resolve();
+        }, 2000);
+      });
     },
     addTodo({ commit, state }, todo) {
       const newTodo = { ...todo };

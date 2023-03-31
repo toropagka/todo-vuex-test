@@ -12,7 +12,6 @@
         Sort {{ sortDirection }}
       </button>
     </div>
-    <the-preloader v-if="store.getters.getTodos.length === 0"></the-preloader>
     <paginate
       :pageCount="pageCount"
       :currentPage="currentPage.value"
@@ -31,10 +30,9 @@
 <script setup>
 import TodoItem from './TodoItem.vue';
 import TheForm from './TheForm.vue';
-import ThePreloader from './ThePreloader.vue';
 import Paginate from 'vuejs-paginate-next';
 
-import { onMounted, reactive, watchEffect, computed, watch, ref } from 'vue';
+import { reactive, watchEffect, computed, watch, ref } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
@@ -43,17 +41,12 @@ const currentPage = reactive({ value: 1 });
 const itemsPerPage = 5;
 const searchTitle = ref('');
 
-const getTodo = store.getters.getTodos;
+// const loading = ref(true); // добавляем переменную loading
 
 //пушим объект новой тудушки в массив
 const handleSubmit = (todo) => {
   store.dispatch('addTodo', todo);
 };
-
-//загружаем из локалсторадж первоначальный список для отрисовки
-onMounted(() => {
-  store.dispatch('loadTodos');
-});
 
 //отслеживаем изменения в указанных переменных для переопределения
 watchEffect(() => {
@@ -66,6 +59,7 @@ watchEffect(() => {
 });
 
 //фильтруем основной массив тудушек и получаем массивы для каждой страницы пагинации
+
 const currentTodos = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
@@ -88,15 +82,15 @@ const handlePageChange = (page) => {
   currentPage.value = page;
 };
 
-//сортируем записи по каждой странице
+//сортируем записи по алфавиту
 const sortDirection = ref('asc');
 
 const toggleSort = () => {
   sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
   if (sortDirection.value === 'asc') {
-    return currentTodos.value.sort((a, b) => a.title.localeCompare(b.title));
+    return todos.value.sort((a, b) => a.title.localeCompare(b.title));
   } else {
-    return currentTodos.value.sort((a, b) => b.title.localeCompare(a.title));
+    return todos.value.sort((a, b) => b.title.localeCompare(a.title));
   }
 };
 </script>

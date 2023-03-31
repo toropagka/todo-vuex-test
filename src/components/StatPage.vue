@@ -1,13 +1,9 @@
 <template>
-  <the-preloader v-if="statusArray.length === 0"></the-preloader>
-
   <Bar :data="data" :options="options" />
 </template>
 
 <script setup>
-import ThePreloader from './ThePreloader.vue';
-
-import { ref, onMounted, watchEffect, computed } from 'vue';
+import { ref, watchEffect, computed } from 'vue';
 import { useStore } from 'vuex';
 
 import {
@@ -71,18 +67,16 @@ const options = {
   },
 };
 
+// Получаем массив со всеми статусами
 const statusArray = computed(() => {
-  return Array.from(new Set(chartData.value.map((obj) => obj.status))); // Получаем массив со всеми статусами
+  return Array.from(new Set(chartData.value.map((obj) => obj.status)));
 });
 
+// Получаем массив с количеством объектов с каждым статусом
 const countArray = computed(() => {
   return statusArray.value.map(
     (status) => chartData.value.filter((obj) => obj.status === status).length
-  ); // Получаем массив с количеством объектов с каждым статусом
-});
-
-onMounted(() => {
-  store.dispatch('loadTodos');
+  );
 });
 
 watchEffect(() => {
