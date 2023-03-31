@@ -38,7 +38,7 @@ import { useStore } from 'vuex';
 const store = useStore();
 const todos = reactive({ value: [] });
 const currentPage = reactive({ value: 1 });
-const itemsPerPage = 5;
+const ITEMS_PER_PAGE = 5;
 const searchTitle = ref('');
 
 //пушим объект новой тудушки в массив
@@ -59,8 +59,8 @@ watchEffect(() => {
 //фильтруем основной массив тудушек и получаем массивы для каждой страницы пагинации
 
 const currentTodos = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
+  const start = (currentPage.value - 1) * ITEMS_PER_PAGE;
+  const end = start + ITEMS_PER_PAGE;
   const filteredTodos = todos.value.filter((todo) =>
     todo.title.toLowerCase().includes(searchTitle.value.toLowerCase())
   );
@@ -72,7 +72,7 @@ const pageCount = computed(() => {
   const filteredTodos = todos.value.filter((todo) =>
     todo.title.toLowerCase().includes(searchTitle.value.toLowerCase())
   );
-  return Math.ceil(filteredTodos.length / itemsPerPage);
+  return Math.ceil(filteredTodos.length / ITEMS_PER_PAGE);
 });
 
 //обрабатываем клик по каждой странице пагинации

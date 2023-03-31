@@ -60,7 +60,7 @@
 <script setup>
 import TheForm from './TheForm.vue';
 
-import { defineProps, ref, onBeforeMount, onUnmounted } from 'vue';
+import { ref, onBeforeMount, onUnmounted } from 'vue';
 import { useStore } from 'vuex';
 const props = defineProps({
   todo: {

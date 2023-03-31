@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { defineEmits, ref, defineProps } from 'vue';
+import { ref } from 'vue';
 import guidFactory from '../utils/guid';
 
 const props = defineProps({
