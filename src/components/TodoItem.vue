@@ -2,7 +2,6 @@
   <div class="wrapper">
     <div class="item">
       <div class="item_header">
-        <h3 class="header_text">{{ todo.title }}</h3>
         <div class="header_status" :class="todo.status">
           {{ todo.status }}
         </div>
@@ -17,28 +16,51 @@
           <button
             type="button"
             class="header_button header_button__delete"
-            @click="deleteTodo(todo)"
+            @click="deleteTodo"
           >
             delete
           </button>
         </div>
       </div>
+      <h3 class="item_text">{{ todo.title }}</h3>
 
       <p class="item_details">{{ todo.details }}</p>
     </div>
-    <the-form
-      v-if="clickedEdit"
-      :todo="todo"
-      @add-handler="saveChanges"
-      class="edit-form"
-    ></the-form>
+  </div>
+  <the-form
+    v-if="clickedEdit"
+    :todo="todo"
+    @add-handler="saveChanges"
+    class="edit-form"
+  ></the-form>
+
+  <div v-if="clickedDelete" class="popup-wrapper">
+    <span class="popup-wrapper_text"
+      >Are you sure you want to delete the entry?</span
+    >
+    <div class="popup-wrapper_buttons">
+      <button
+        type="button"
+        class="popup-wrapper_button__yes"
+        @click="confirmDelete(todo)"
+      >
+        YES
+      </button>
+      <button
+        type="button"
+        class="popup-wrapper_button__no"
+        @click="deleteTodo"
+      >
+        NO
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup>
 import TheForm from './TheForm.vue';
 
-import { defineProps, toRef, ref } from 'vue';
+import { defineProps, ref, onBeforeMount, onUnmounted } from 'vue';
 import { useStore } from 'vuex';
 const props = defineProps({
   todo: {
@@ -47,9 +69,9 @@ const props = defineProps({
 });
 
 const store = useStore();
-// const todos = toRef(props, 'todo');
 
 const clickedEdit = ref(false);
+const clickedDelete = ref(false);
 const editTodo = () => {
   clickedEdit.value = !clickedEdit.value;
 };
@@ -59,15 +81,35 @@ const saveChanges = (todo) => {
   store.dispatch('updateTodo', todo);
 };
 
-const deleteTodo = (todo) => {
+const confirmDelete = (todo) => {
   store.dispatch('deleteTodo', todo);
+  clickedDelete.value = !clickedDelete.value;
 };
+const deleteTodo = () => {
+  clickedDelete.value = !clickedDelete.value;
+};
+
+const hidePopupAndForm = (event) => {
+  const clickedElement = event.target;
+  if (
+    !clickedElement.closest('.popup-wrapper') &&
+    !clickedElement.closest('.edit-form')
+  ) {
+    clickedDelete.value = false;
+    clickedEdit.value = false;
+  }
+};
+
+onBeforeMount(() => {
+  document.addEventListener('mouseup', hidePopupAndForm);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('mouseup', hidePopupAndForm);
+});
 </script>
 
 <style scoped>
-.wrapper {
-  position: relative;
-}
 .item {
   display: flex;
   flex-direction: column;
@@ -81,8 +123,14 @@ const deleteTodo = (todo) => {
   justify-content: space-between;
   align-items: center;
 }
-.header_text {
-  width: 9rem;
+.item_text {
+  overflow: hidden;
+  padding-right: 1rem;
+}
+.item_details,
+.item_text {
+  width: 100%;
+  word-wrap: break-word;
 }
 .header_status {
   display: flex;
@@ -98,11 +146,13 @@ const deleteTodo = (todo) => {
   align-items: center;
   gap: 1rem;
 }
-/* button {
-  width: 4rem;
-  height: 2.5rem;
-  border-radius: 10px;
-} */
+.header_button__delete {
+  background: rgb(130, 129, 129);
+}
+.header_button__edit {
+  background: #35df90;
+}
+
 .queued {
   background-color: rgb(218, 50, 50);
 }
@@ -112,17 +162,42 @@ const deleteTodo = (todo) => {
 .completed {
   background-color: rgb(39, 205, 39);
 }
-.edit-popup {
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(131, 131, 132, 0.5);
-}
+
 .edit-form {
-  position: absolute;
-  top: 0;
-  left: 15rem;
+  position: fixed;
+  left: 20%;
+  top: 40%;
   z-index: 10;
   width: 50%;
   background: #29486e;
+}
+
+/*стили для попапа подтверждения удаления*/
+.popup-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  position: fixed;
+  padding-top: 5rem;
+  z-index: 999999;
+  background-color: rgba(0, 0, 0, 0.9);
+  width: 40%;
+  height: 40%;
+  text-align: center;
+  left: 30%;
+  top: 40%;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+.popup-wrapper_text {
+  color: white;
+}
+.popup-wrapper_text {
+  font-size: 1.5rem;
+}
+.popup-wrapper_buttons {
+  display: flex;
+  justify-content: center;
+  gap: 5rem;
 }
 </style>

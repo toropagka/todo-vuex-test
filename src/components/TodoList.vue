@@ -41,8 +41,6 @@ const currentPage = reactive({ value: 1 });
 const itemsPerPage = 5;
 const searchTitle = ref('');
 
-// const loading = ref(true); // добавляем переменную loading
-
 //пушим объект новой тудушки в массив
 const handleSubmit = (todo) => {
   store.dispatch('addTodo', todo);
@@ -101,6 +99,8 @@ const toggleSort = () => {
   font-size: 1.3rem;
   width: 70%;
   border-radius: 0.3rem;
+  border-color: transparent;
+  background: #35df90;
 }
 .pagination {
   display: flex;
@@ -116,5 +116,6 @@ const toggleSort = () => {
 }
 .filter-button {
   width: 7rem;
+  background: #35df90;
 }
 </style>

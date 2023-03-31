@@ -16,6 +16,7 @@ body {
   justify-content: center;
   min-width: 320px;
   max-width: 1440px;
+  overflow-y: scroll;
 }
 #app {
   width: 100%;
@@ -26,6 +27,7 @@ button {
   width: 4rem;
   height: 2.5rem;
   border-radius: 10px;
+  border-color: transparent;
 }
 .disabled {
   color: rgb(135, 133, 132);

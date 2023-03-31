@@ -1,4 +1,3 @@
-<!-- Pagination.vue -->
 <template>
   <div>
     <paginate

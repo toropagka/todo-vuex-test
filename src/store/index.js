@@ -22,10 +22,6 @@ const store = createStore({
     },
   },
   actions: {
-    // loadTodos({ commit }) {
-    //   const todos = JSON.parse(localStorage.getItem('todos') || '[]');
-    //   commit('SET_TODOS', todos);
-
     loadTodos({ commit }) {
       // Возвращаем промис
       return new Promise((resolve) => {
@@ -33,8 +29,6 @@ const store = createStore({
         setTimeout(() => {
           const todos = JSON.parse(localStorage.getItem('todos') || '[]');
           commit('SET_TODOS', todos);
-          console.log('vuex');
-
           // Вызываем resolve после выполнения таймера
           resolve();
         }, 2000);
