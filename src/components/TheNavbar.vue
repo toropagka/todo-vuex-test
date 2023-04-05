@@ -14,7 +14,7 @@ import { useStore } from 'vuex';
 
 const store = useStore();
 
-const loading = ref(true); // добавляем переменную loading
+const loading = ref(true);
 
 //загружаем из локалсторадж первоначальный список для отрисовки
 onMounted(() => {

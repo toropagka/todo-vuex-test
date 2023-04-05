@@ -62,6 +62,7 @@ import TheForm from './TheForm.vue';
 
 import { ref, onBeforeMount, onUnmounted } from 'vue';
 import { useStore } from 'vuex';
+
 const props = defineProps({
   todo: {
     type: Object,
@@ -72,9 +73,11 @@ const store = useStore();
 
 const clickedEdit = ref(false);
 const clickedDelete = ref(false);
+
 const editTodo = () => {
   clickedEdit.value = !clickedEdit.value;
 };
+
 const saveChanges = (todo) => {
   clickedEdit.value = !clickedEdit.value;
 
@@ -85,6 +88,7 @@ const confirmDelete = (todo) => {
   store.dispatch('deleteTodo', todo);
   clickedDelete.value = !clickedDelete.value;
 };
+
 const deleteTodo = () => {
   clickedDelete.value = !clickedDelete.value;
 };

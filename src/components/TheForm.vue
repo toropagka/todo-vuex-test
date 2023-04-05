@@ -41,7 +41,6 @@
 
 <script setup>
 import { ref } from 'vue';
-import guidFactory from '../utils/guid';
 
 const props = defineProps({
   todo: {
@@ -49,12 +48,33 @@ const props = defineProps({
   },
 });
 
+//создаем уникальный айди
+const guidFactory = (function () {
+  function getRandomString() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  function gen(numberOfFunctionCalls) {
+    let result = '';
+    for (let i = 0; i < numberOfFunctionCalls; ++i) result += getRandomString();
+    return result;
+  }
+
+  return {
+    create: function () {
+      return [gen(2), gen(1), gen(1), gen(1), gen(3)].join('-');
+    },
+  };
+})();
+
 const title = ref(props.todo?.title || '');
 const details = ref(props.todo?.details || '');
-const status = ref(props.todo?.status || '');
-const id = ref(props.todo?.id || guidFactory.create(1));
+const status = ref(props.todo?.status || 'queued');
+const id = ref(props.todo?.id || guidFactory.create());
 
 const emit = defineEmits(['add-handler']);
+
 function handleClick() {
   const todo = {
     title: title.value,
@@ -62,12 +82,13 @@ function handleClick() {
     status: status.value,
     id: id.value,
   };
+
   emit('add-handler', todo);
 
-  //clear form
+  //очищаем поля формы
   title.value = '';
   details.value = '';
-  status.value = '';
+  status.value = props.todo?.status || 'queued';
   id.value = guidFactory.create(1);
 }
 </script>
