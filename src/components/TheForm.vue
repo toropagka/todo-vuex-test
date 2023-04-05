@@ -1,9 +1,9 @@
 <template>
   <form @submit.prevent="handleClick">
     <label>Title: </label>
-    <input type="text" v-model="title" required />
+    <input type="text" v-model.trim="title" required />
     <label>Details: </label>
-    <textarea v-model="details" required></textarea>
+    <textarea v-model.trim="details" required></textarea>
     <label>Status: </label>
     <div class="form_status">
       <label class="status_label">
